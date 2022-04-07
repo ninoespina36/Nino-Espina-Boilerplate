@@ -1,5 +1,6 @@
 {
-  "name": "web-parentportal",
+  "name": "nino-espina-boilerplate",
+  "author": "Nino Espina",
   "version": "0.1.0",
   "private": true,
   "scripts": {
