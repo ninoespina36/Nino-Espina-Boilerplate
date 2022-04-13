@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Head from 'next/head';
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
+import { Toaster } from 'react-hot-toast';
 
 import { store, wrapper } from '../store';
 
@@ -33,9 +34,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     // Unsubscribe from router events
     return ()=>{
-        router.events.off('routeChangeStart', progressStart);
-        router.events.off('routeChangeComplete', progressDone);
-        router.events.off('routeChangeError', progressDone);
+      router.events.off('routeChangeStart', progressStart);
+      router.events.off('routeChangeComplete', progressDone);
+      router.events.off('routeChangeError', progressDone);
     }
 }, []);
 
@@ -51,7 +52,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap"/>
         </Head>
 
-         {/* Main Body*/}
+        {/* Toaster */}
+        <Toaster position="top-center"/>
+
+        {/* Main Body */}
         <Component {...pageProps} />
       </PersistGate>
     </Provider>

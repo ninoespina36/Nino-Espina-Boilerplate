@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { logout } from '../store/reducers/authReducer';
-import Button from '../components/form/Button';
 
 interface Props {
     children: JSX.Element
@@ -14,7 +13,7 @@ const PrivateLayout = ({ children }: Props) =>{
 
     const router = useRouter();
     const { isAuthenticated } = useAppSelector(state => state.auth);
-    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ loading, setLoading ] = useState<string>('');
     const dispatch = useAppDispatch();
 
     if (!isAuthenticated) {
@@ -23,30 +22,42 @@ const PrivateLayout = ({ children }: Props) =>{
     }
 
     const handleLogout = () =>{
-        setLoading(true);
+        setLoading('Logging out...');
         setTimeout(()=>{
             dispatch(logout());
-            router.replace('/dashboard');
-            setLoading(false);
+            router.replace('/');
+            setLoading('');
         }, 3000)
     }
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col">
+
+            {/* Public Header */}
             <header className="border-b">
                 <div className="container mx-auto flex justify-between p-5 items-center">
                     <Link href="/"><a><h1><b>Nino Espina</b> Boilerplate</h1></a></Link>
-                    <Button 
+                    <button
+                        className={`btn no-animation ${loading && 'loading'}`} 
                         onClick={handleLogout}
-                        loading={loading} 
-                        loadingText="Logging out..."
+                        disabled={!!loading}
                     >
-                        {isAuthenticated ? 'Logout' : 'Login'}
-                    </Button>
+                        {loading ? loading : 'Logout'}
+                    </button>
                 </div>
             </header>
 
-            {children}
+            {/* Body */}
+            <div className="flex-grow">
+                {children}
+            </div>
+
+            {/* Footer */}
+            <footer className="border-t">
+                <div className="container mx-auto p-5">
+                    <p className="text-sm">&copy; All rights reserved {new Date().getFullYear()}</p>
+                </div>
+            </footer>
         </div>
     )
 }

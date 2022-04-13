@@ -8,6 +8,7 @@ interface Props {
 const Button = ({ children, loading, loadingText, onClick }: Props) =>{
     return (
         <button 
+            data-testid="button-main"
             type="button" 
             onClick={onClick}
             disabled={loading}

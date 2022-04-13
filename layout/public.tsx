@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import Button from '../components/form/Button';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { login, logout } from '../store/reducers/authReducer';
 
@@ -13,7 +12,7 @@ interface Props {
 const PublicLayout = ({ children }: Props) =>{
 
     const { isAuthenticated } = useAppSelector(state => state.auth);
-    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ loading, setLoading ] = useState<string>('');
     const dispatch = useAppDispatch();
     const router = useRouter();
 
@@ -24,42 +23,50 @@ const PublicLayout = ({ children }: Props) =>{
             email: 'john@email.com',
             token: '1340920490424-token'
         }
-        setLoading(true);
+        setLoading('Logging in...');
         setTimeout(()=>{
             dispatch(login(user));
             router.replace('/dashboard');
-            setLoading(false);
+            setLoading('');
         }, 3000)
     }
 
     const handleLogout = () =>{
-        setLoading(true);
+        setLoading('Logging out...');
         setTimeout(()=>{
             dispatch(logout());
             router.replace('/dashboard');
-            setLoading(false);
+            setLoading('');
         }, 3000)
     }
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col">
+
+            {/* Public Header */}
             <header className="border-b">
                 <div className="container mx-auto flex justify-between p-5 items-center">
                     <Link href="/"><a><h1><b>Nino Espina</b> Boilerplate</h1></a></Link>
-                    <Button 
+                    <button
+                        className={`btn no-animation ${loading && 'loading'}`} 
                         onClick={()=> isAuthenticated ? handleLogout() : handleLogin()}
-                        loading={loading} 
-                        loadingText={isAuthenticated ? 'Logging out...' : 'Logging in...'}
+                        disabled={!!loading}
                     >
-                        {isAuthenticated ? 'Logout' : 'Login'}
-                    </Button>
+                        {loading ? loading : isAuthenticated ?  'Log out' : 'Log in'}
+                    </button>
                 </div>
             </header>
 
-            {children}
+            {/* Body */}
+            <div className="flex-grow">
+                {children}
+            </div>
 
-            <footer className="container mx-auto p-5">
-                &copy; All rights reserved. <b>Nino Espina</b> Boilerplate
+            {/* Footer */}
+            <footer>
+                <div className="container mx-auto p-5">
+                    <p className="text-sm">&copy; All rights reserved {new Date().getFullYear()}</p>
+                </div>
             </footer>
         </div>
     )
